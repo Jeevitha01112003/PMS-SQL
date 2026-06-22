@@ -1,0 +1,209 @@
+CREATE TABLE tbl_UserProfile (
+    User_ID INT IDENTITY(1,1) PRIMARY KEY,
+    FullName VARCHAR(100) NOT NULL,
+    Rec_Address VARCHAR(255),
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    MobileNumber VARCHAR(15) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    Role VARCHAR(20) NOT NULL
+);
+
+
+
+INSERT INTO tbl_UserProfile
+(FullName, Rec_Address, Email, MobileNumber, Password, Role)
+VALUES
+('John', 'Chennai', 'john@gmail.com', '9876543210', 'john123', 'Customer'),
+('Mary', 'Madurai', 'mary@gmail.com', '9876543211', 'mary123', 'Customer'),
+('David', 'Trichy', 'david@gmail.com', '9876543212', 'david123', 'Officer'),
+('Peter', 'Salem', 'peter@gmail.com', '9876543213', 'peter123', 'Customer'),
+('Ravi', 'Coimbatore', 'ravi@gmail.com', '9876543214', 'ravi123', 'Officer');
+
+
+SELECT
+    CASE
+        WHEN COUNT(*) > 0 THEN 1
+        ELSE 0
+    END AS IsValidUser,
+    Role
+FROM tbl_UserProfile
+WHERE Email = 'john@gmail.com'
+  AND Password = 'john123'
+GROUP BY Role;
+
+
+
+INSERT INTO tbl_Booking
+(
+ User_ID, Rec_Name, Rec_Address, Rec_Pin,
+ Rec_Mobile, Par_Weight_Gram,
+ Par_Contents_Description,
+ Par_Delivery_Type,
+ Par_Packing_Preference,
+ Par_PickupTime,
+ Par_DropoffTime,
+ Par_ServiceCost,
+ Par_PaymentTime,
+ Par_Status
+)
+VALUES
+(
+ 1,
+ 'Kumar',
+ 'Madurai',
+ '625001',
+ '9876501234',
+ 500,
+ 'Books',
+ 'Express',
+ 'Box',
+ GETDATE(),
+ DATEADD(HOUR,24,GETDATE()),
+ 150,
+ GETDATE(),
+ 'Booked'
+);
+
+
+
+SELECT
+    FullName,
+    Rec_Address,
+    MobileNumber,
+    Email
+FROM tbl_UserProfile
+WHERE User_ID = 1;
+
+
+
+
+INSERT INTO tbl_Booking
+(
+ User_ID, Rec_Name, Rec_Address, Rec_Pin,
+ Rec_Mobile, Par_Weight_Gram,
+ Par_Contents_Description,
+ Par_Delivery_Type,
+ Par_Packing_Preference,
+ Par_PickupTime,
+ Par_DropoffTime,
+ Par_ServiceCost,
+ Par_PaymentTime,
+ Par_Status
+)
+VALUES
+(
+ 1,
+ 'Kumar',
+ 'Madurai',
+ '625001',
+ '9876501234',
+ 500,
+ 'Books',
+ 'Express',
+ 'Box',
+ GETDATE(),
+ DATEADD(HOUR,24,GETDATE()),
+ 150,
+ GETDATE(),
+ 'Booked'
+);
+
+
+
+SELECT
+    Booking_ID,
+    Rec_Name,
+    Rec_Address,
+    Rec_Pin,
+    Rec_Mobile,
+    Par_Weight_Gram,
+    Par_Contents_Description,
+    Par_Delivery_Type,
+    Par_Packing_Preference,
+    Par_PickupTime,
+    Par_DropoffTime,
+    Par_ServiceCost,
+    Par_PaymentTime
+FROM tbl_Booking
+WHERE Booking_ID = 1001;
+
+
+SELECT TOP 10
+    b.Booking_ID,
+    u.FullName,
+    u.Rec_Address AS Address,
+    b.Rec_Name,
+    b.Rec_Address,
+    b.Par_PickupTime AS DateOfBooking,
+    b.Par_Status
+FROM tbl_Booking b
+INNER JOIN tbl_UserProfile u
+    ON b.User_ID = u.User_ID
+WHERE b.User_ID = 1
+ORDER BY b.Booking_ID DESC;
+
+
+SELECT
+    b.Booking_ID,
+    u.FullName,
+    u.Rec_Address AS Address,
+    b.Rec_Name,
+    b.Rec_Address,
+    b.Par_PickupTime,
+    b.Par_DropoffTime,
+    b.Par_Status
+FROM tbl_Booking b
+INNER JOIN tbl_UserProfile u
+ON b.User_ID = u.User_ID
+WHERE b.Booking_ID = @BookingID;
+
+
+UPDATE tbl_Booking
+SET
+    Par_PickupTime = @PickupTime,
+    Par_DropoffTime = @DropoffTime
+WHERE Booking_ID = @BookingID;
+
+SELECT
+    b.Booking_ID,
+    u.FullName,
+    u.Rec_Address AS Address,
+    b.Rec_Name,
+    b.Rec_Address,
+    b.Par_PickupTime AS DateOfBooking,
+    b.Par_Status
+FROM tbl_Booking b
+INNER JOIN tbl_UserProfile u
+ON b.User_ID = u.User_ID
+WHERE b.Booking_ID = @BookingID;
+
+
+UPDATE tbl_Booking
+SET Par_Status = @Status
+WHERE Booking_ID = @BookingID;
+
+
+SELECT
+    b.User_ID AS CustomerID,
+    b.Booking_ID,
+    b.Par_PickupTime AS BookingDate,
+    b.Rec_Name AS ReceiverName,
+    b.Rec_Address AS DeliveredAddress,
+    b.Par_ServiceCost AS Amount,
+    b.Par_Status AS Status
+FROM tbl_Booking b
+WHERE b.User_ID = @UserID
+ORDER BY b.Par_PickupTime DESC;
+
+
+
+SELECT
+    Booking_ID,
+    User_ID,
+    Rec_Name,
+    Rec_Address,
+    Par_ServiceCost,
+    Par_Status
+FROM tbl_Booking
+WHERE Par_Status = 'Delivered'
+ORDER BY Booking_ID DESC;
