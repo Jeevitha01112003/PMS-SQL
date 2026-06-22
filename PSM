@@ -32,6 +32,26 @@ WHERE Email = 'john@gmail.com'
 GROUP BY Role;
 
 
+CREATE TABLE tbl_Booking (
+    Booking_ID INT IDENTITY(1001,1) PRIMARY KEY,
+    User_ID INT,
+    Rec_Name VARCHAR(100),
+    Rec_Address VARCHAR(255),
+    Rec_Pin VARCHAR(10),
+    Rec_Mobile VARCHAR(15),
+    Par_Weight_Gram DECIMAL(10,2),
+    Par_Contents_Description VARCHAR(255),
+    Par_Delivery_Type VARCHAR(50),
+    Par_Packing_Preference VARCHAR(50),
+    Par_PickupTime DATETIME,
+    Par_DropoffTime DATETIME,
+    Par_ServiceCost DECIMAL(10,2),
+    Par_PaymentTime DATETIME,
+    Par_Status VARCHAR(30),
+    FOREIGN KEY (User_ID)
+    REFERENCES tbl_UserProfile(User_ID)
+);
+
 
 INSERT INTO tbl_Booking
 (
